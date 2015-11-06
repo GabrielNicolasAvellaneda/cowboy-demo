@@ -16,6 +16,14 @@
 %%====================================================================
 
 start(_StartType, _StartArgs) ->
+    Dispatch = cowboy_router:compile([
+      {'_', [
+	     {"/", cowboy_static, {priv_file, site, "index.html"}}
+	    ]}
+				    ]),
+      {ok, _} = cowboy:start_http(http, 100, [{port, 8080}], [
+	{env, [{dispatch, Dispatch}]}
+							   ]),
     'site_sup':start_link().
 
 %%--------------------------------------------------------------------
